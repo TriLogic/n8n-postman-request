@@ -261,24 +261,29 @@ export class PostmanRequest implements INodeType {
 
         // Output
         if (respFormat === 'binary') {
-          const bin = Buffer.isBuffer(parsed) ? parsed : Buffer.from(typeof parsed === 'string' ? parsed : JSON.stringify(parsed));
-          out.push({
+        const binBuffer = Buffer.isBuffer(parsed)
+            ? parsed
+            : Buffer.from(typeof parsed === 'string' ? parsed : JSON.stringify(parsed));
+
+        const mime = String(headersResp?.['content-type'] ?? 'application/octet-stream');
+        const binaryData = await this.helpers.prepareBinaryData(binBuffer, 'response', mime);
+
+        out.push({
             json: { __tests: testSummary },
-            binary: {
-              data: { data: bin, fileName: 'response', mimeType: String((headersResp?.['content-type'] as string) || 'application/octet-stream') },
-            },
-          });
+            binary: { data: binaryData }, // <-- correct n8n binary format (base64 inside)
+        });
         } else if (fullResponse) {
-          out.push({ json: { body: parsed, statusCode, headers: headersResp, responseTime: elapsedMs, __tests: testSummary } as IDataObject });
+        out.push({ json: { body: parsed, statusCode, headers: headersResp, responseTime: elapsedMs, __tests: testSummary } as IDataObject });
         } else {
-          out.push({
+        out.push({
             json: {
-              ...((typeof parsed === 'object' && parsed !== null) ? parsed : { body: parsed }),
-              __meta: { statusCode, headers: headersResp, responseTime: elapsedMs },
-              __tests: testSummary,
+            ...((typeof parsed === 'object' && parsed !== null) ? parsed : { body: parsed }),
+            __meta: { statusCode, headers: headersResp, responseTime: elapsedMs },
+            __tests: testSummary,
             },
-          });
+        });
         }
+
       } catch (err: any) {
         if (this.continueOnFail()) {
           out.push({ json: { error: err.message, stack: err.stack }, pairedItem: { item: i } });
@@ -286,6 +291,8 @@ export class PostmanRequest implements INodeType {
         }
         throw err;
       }
+      // output ends
+
     }
 
     return [out];
