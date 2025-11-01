@@ -1,7 +1,7 @@
 # Postman Request (n8n community node)
 
 
-**Goal:** Postman request parity inside n8n with first-class support for headers, params, bodies, auth, files, and robust response handling + Chai assertions.
+**Goal:** Replicate the functionality of a Postman request inside n8n with first-class support for headers, params, bodies, auth, files, response handling and Chai assertions.
 
 
 ## Features
