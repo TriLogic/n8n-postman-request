@@ -10,7 +10,7 @@
 - Bodies: x-www-form-urlencoded, multipart/form-data (binary from item), raw (JSON/Text/XML), GraphQL, binary
 - Headers/Query collections with enable/disable flags
 - Options: redirects, timeout, proxy, gzip/decompress, response format (auto/json/text/binary)
-- Assertions: Enable a Chai VM sandbox with Postman-style helpers (`pm.response.to.have.status(...)`, `pm.environment`, `pm.variables`, `pm.cookies`, `pm.test()`)
+- Assertions: Enable a VM based JavaScript sandbox with Chai assertions and Postman-style helpers (`pm.response.to.have.status(...)`, `pm.environment`, `pm.variables`, `pm.cookies`, `pm.test()`)
 
 
 ## Install (local dev)
